@@ -82,8 +82,12 @@ void swap_min_max(int* mas, int size)
 {
 	int min_index = find_min_index(mas, size);
 	int max_index = find_max_index(mas, size);
-	swap(mas[0], mas[min_index]);
-	swap(mas[size - 1], mas[max_index]);
+	int min = mas[min_index];
+	int max = mas[max_index];
+	mas[min_index] = mas[0];
+	mas[0] = min;
+	mas[max_index] = mas[size - 1];
+	mas[size - 1] = max;
 }
 
 bool is_even(int number)
