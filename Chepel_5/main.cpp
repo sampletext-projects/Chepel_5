@@ -1,10 +1,10 @@
-﻿#include <iostream>
+﻿#include <ctime>
+#include <iostream>
 
 using namespace std;
 
 void read_mas(int* mas, int size)
 {
-	cout << "mas: " << endl;
 	for (int i = 0; i < size; i++)
 	{
 		cout << "[" << i << "] = ";
@@ -14,7 +14,6 @@ void read_mas(int* mas, int size)
 
 void write_mas(int* mas, int size)
 {
-	cout << "mas: ";
 	for (int i = 0; i < size; i++)
 	{
 		cout << mas[i] << " ";
@@ -114,6 +113,50 @@ void remove_even(int* mas, int size)
 	}
 }
 
+void fill_random(int* mas, int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		mas[i] = rand() % 100;
+	}
+}
+
+bool is_simple(int number)
+{
+	bool res = true;
+	//можно искать все множители до корня числа, т.к. сам корень уже является делителем
+	for (int i = 2; i <= sqrt(number); i++)
+	{
+		if (number % i == 0)
+		{
+			res = false;
+		}
+	}
+	return res;
+}
+
+int* remove_non_simple(int* mas, int size, int& m_size)
+{
+	int* dst = new int[size];
+	int k = 0; //количество удалённых элементов
+	for (int i = 0; i < size; i++)
+	{
+		dst[k] = mas[i];
+		if (is_simple(mas[i]))
+		{
+			k++;
+		}
+	}
+
+	m_size = k; //меняем размер (это значение будет возвращено)
+	int* dest = new int[m_size]; //новый массив
+	for (int i = 0; i < m_size; i++)
+	{
+		dest[i] = dst[i];
+	}
+	return dest; //пересохраняем массив
+}
+
 void print_menu()
 {
 	cout << "1. Ввод массива" << endl;
@@ -122,12 +165,16 @@ void print_menu()
 	cout << "4. Найти максимум массива" << endl;
 	cout << "5. Заменить минимум и максимум с началом и концом массива" << endl;
 	cout << "6. Удалить все чётные числа из массива" << endl;
+	cout << "7. Заполнить случайными числами" << endl;
+	cout << "8. Оставить только простые числа" << endl;
 	cout << "0. Выход" << endl;
 }
 
 int main()
 {
 	setlocale(LC_ALL, "russian");
+
+	srand(time(0));
 
 	cout << "Автор: Чепель Егор Максимович" << endl;
 	cout << "Программа по манипулированию массивом с помощью функций" << endl;
@@ -204,6 +251,28 @@ int main()
 				}
 				remove_even(mas, size);
 				cout << "Чётные числа удалены." << endl;
+				break;
+			}
+		case 7:
+			{
+				cout << "Введите размер массива: ";
+				cin >> size;
+
+				mas = new int[size];
+				fill_random(mas, size);
+				cout << "Массив заполнен." << endl;
+				break;
+			}
+		case 8:
+			{
+				if (size == -1)
+				{
+					cout << "Перед удалением необходимо ввести массив!" << endl;
+					break;
+				}
+				int m_size;
+				int* m = remove_non_simple(mas, size, m_size);
+				write_mas(m, m_size);
 				break;
 			}
 		}
